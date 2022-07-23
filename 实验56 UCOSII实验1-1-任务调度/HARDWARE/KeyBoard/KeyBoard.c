@@ -207,7 +207,7 @@ double input_double_s(int row,int col)
   key_return_c=0;
   ROW_H_COL_L();
   key_return_c=ReadKeyBoard();
-//	key_return_c=KeyValue;
+	key_return_c=KeyValue;
   if(key_return_c<10)
   {
     CHAR_temp[i]=array_CHAR[key_return_c];//array_CHAR[16]={'0','1','2','3','4','5','6','7','8','9','A','B','C','*','#','D'};

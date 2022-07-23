@@ -31,7 +31,7 @@ void start_task(void *pdata);
  			   
 //LED0任务
 //设置任务优先级
-#define LED0_TASK_PRIO       			6 
+#define LED0_TASK_PRIO       			7 
 //设置任务堆栈大小
 #define LED0_STK_SIZE  		    		64
 //任务堆栈	
@@ -42,7 +42,7 @@ void led0_task(void *pdata);
 
 //LED1任务
 //设置任务优先级
-#define LED1_TASK_PRIO       			5
+#define LED1_TASK_PRIO       			6
 //设置任务堆栈大小
 #define LED1_STK_SIZE  					64
 //任务堆栈
@@ -66,9 +66,10 @@ int flag;
 extern int Enter_flag;
 int code[20]={1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int code1[20]={1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-double key_input=0;	
+int key_input=0;	
 int stop=0;
 int stop_flag;
+int num=0;
 
 
 int main(void)
@@ -81,7 +82,7 @@ int main(void)
 	LCD_Init();					//LCD初始化
 	Init_KeyBoard_Port();//按键初始化
 	//Relay_Init();				//继电器in初始化
-	//TIM3_Int_Init(50-1,84-1);	//定时器时钟84M，分频系数8400，所以84M/8400=10Khz的计数频率，计数5000次为500ms     
+	TIM3_Int_Init(50-1,84-1);	//定时器时钟84M，分频系数8400，所以84M/8400=10Khz的计数频率，计数5000次为500ms     
 	//EXTIX_Init();				//中断初始化
 	
 	OSInit();   
@@ -108,10 +109,12 @@ void led0_task(void *pdata)
 {	 	
 	while(1)
 	{
-		//printf("task0 ");
-		key_input=input_double_s(30,400);
-		printf("%f",key_input);
-		if(((char)key_input)==12)
+		printf("%d ",num);
+		//LED1=!LED1;
+		//delay_ms(90);
+		ROW_H_COL_L();
+		key_input=ReadKeyBoard();
+		if(key_input==10||key_input==11||key_input==12||key_input==15)			//暂停
 		{
 			if(stop_flag==1)
 			{
@@ -119,22 +122,28 @@ void led0_task(void *pdata)
 				stop=1;
 				flag=-1;
 				stop_flag=0;
+				num=0;
 			}
 		}
 		else
 		{
 			stop_flag=1;
 		}
-		if(Enter_flag==1)
+		if(key_input==13)
 		{
 			stop=0;
-			encoder((int)key_input);
+			encoder(num);
 			for(int i=0;i<20;i++)
 			{
 				printf("%d:%d ",i,code[i]);
 			}
 			flag=1;
 			delay_ms(10);
+			num=0;
+		}
+		else if(key_input>=0 && key_input<=9)
+		{
+			num=num*10+key_input;
 		}
 	}
 }
@@ -144,6 +153,9 @@ void led1_task(void *pdata)
 {	
 	while(1){
 		printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ");
+		/*LED0=!LED0;
+		delay_ms(100);
+		*/
 		if(flag>=0)
 		{
 			//flag=1时，对数值重新赋值
