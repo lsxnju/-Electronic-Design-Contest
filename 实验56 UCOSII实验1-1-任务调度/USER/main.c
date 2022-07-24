@@ -84,7 +84,8 @@ int main(void)
 	//Relay_Init();				//继电器in初始化
 	TIM3_Int_Init(50-1,84-1);	//定时器时钟84M，分频系数8400，所以84M/8400=10Khz的计数频率，计数5000次为500ms     
 	//EXTIX_Init();				//中断初始化
-	
+	POINT_COLOR=BLACK; 
+	LCD_Display_Dir(1);
 	OSInit();   
  	OSTaskCreate(start_task,(void *)0,(OS_STK *)&START_TASK_STK[START_STK_SIZE-1],START_TASK_PRIO );//创建起始任务
 	OSStart();	
@@ -118,7 +119,7 @@ void led0_task(void *pdata)
 		{
 			if(stop_flag==1)
 			{
-				printf("^^^^^^^^^^^^^^^^^^^^^^");
+				LCD_Clear(WHITE);
 				stop=1;
 				flag=-1;
 				stop_flag=0;
@@ -128,9 +129,13 @@ void led0_task(void *pdata)
 		else
 		{
 			stop_flag=1;
+			
 		}
 		if(key_input==13)
 		{
+			POINT_COLOR=RED; 
+			LCD_ShowxNum(660,375,num,4,24,0);
+			POINT_COLOR=BLACK; 
 			stop=0;
 			encoder(num);
 			for(int i=0;i<20;i++)
@@ -143,7 +148,9 @@ void led0_task(void *pdata)
 		}
 		else if(key_input>=0 && key_input<=9)
 		{
+			
 			num=num*10+key_input;
+			LCD_ShowxNum(660,375,num,4,24,0);
 		}
 	}
 }
@@ -203,9 +210,7 @@ void led2_task(void *pdata)
 		delay_ms(1);
 		//printf("%ld ",Relay2);
 	}
-}
-*/
-
+}*/
 //对当前按键进行编码
 void encoder(int key_input)
 {

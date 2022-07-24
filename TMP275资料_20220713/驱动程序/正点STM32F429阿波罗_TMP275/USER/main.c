@@ -46,6 +46,7 @@ int main(void)
 	LCD_Init();                     //LCD初始化
 	TMP275_Init(TMP275_ADDR0);			// 初始化TMP275
   EXTI_Init();      							// 外中断初始化
+	printf("AAAA");
 	LCD_Clear(WHITE);
 	POINT_COLOR=RED;
 	LCD_ShowString(30,0,240,24,24,(uint8_t *)"Elite STM32F4 ^_^"); 

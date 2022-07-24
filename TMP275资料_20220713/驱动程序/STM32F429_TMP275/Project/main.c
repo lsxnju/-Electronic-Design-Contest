@@ -45,6 +45,7 @@ int main(void)
 	SDRAM_Init();                			// SDRAM初始化
 	LCD_Init();                  			// LCD初始化
 	TMP275_Init(TMP275_ADDR0);				// 初始化TMP275
+	LCD_DisplayOn();
 	POINT_COLOR=RED; 									// 笔画颜色
 	LCD_ShowString(30,10,200,16,16,"STM32H750 Core Board");	
 	LCD_ShowString(30,30,200,16,16,"TMP275 Temperature TEST");	
